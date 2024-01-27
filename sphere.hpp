@@ -7,7 +7,7 @@
         public:
         Sphere(vec3 center, float radius) : C(center), R(radius){}
 
-        bool hit(Ray& r, float tMin, float tMax, hitRecord& rec) const override{
+        bool hit(Ray& r, interval t, hitRecord& rec) const override{
             vec3 diff = r.A - C;
             float a = r.B.squared_length();
             float hb = dot(diff, r.B);
@@ -17,9 +17,9 @@
             if(delta < 0) return false;
             float sqrtdelta = sqrt(delta);
             float root = (-hb - sqrtdelta)/a;
-            if(root <= tMin || root >= tMax){
+            if(!t.surrounds(root)){
                 root = (-hb + sqrtdelta)/a;
-                if(root <= tMin || root >= tMax) return false;
+                if(!t.surrounds(root)) return false;
             }
             rec.t = root;
             rec.p = r.point(rec.t);

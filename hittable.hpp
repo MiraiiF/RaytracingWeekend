@@ -17,6 +17,6 @@
         public:
         virtual ~Hittable() = default;
 
-        virtual bool hit(Ray& r, float tMin, float tMax, hitRecord& rec) const = 0;
+        virtual bool hit(Ray& r, interval t, hitRecord& rec) const = 0;
     };
 #endif

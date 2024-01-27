@@ -1,6 +1,6 @@
 #ifndef VEC3HPP
 #define VEC3HPP
-#include <math.h>
+#include "random.hpp"
 #include <ostream>
 
 class vec3{
@@ -26,6 +26,16 @@ class vec3{
     inline float length() const{return sqrt(e[0]*e[0] + e[1]*e[1] + e[2]*e[2]);}
     inline float squared_length() const {return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];}
     vec3 makeUnitVector();
+    static vec3 random(){return vec3(random_float(), random_float(), random_float());}
+    static vec3 random(float min, float max){return vec3(random_float(min, max), random_float(min, max), random_float(min, max));}
+    static vec3 randomUnit(){
+        while(true){
+            vec3 p = vec3::random(-1.0f, 1.0f);
+            if(p.squared_length() < 1){
+                return p.makeUnitVector();
+            }
+        }
+    }
 };
 
 vec3 operator+(const vec3& v1, const vec3& v2);
@@ -35,6 +45,8 @@ vec3 operator/(const vec3& v1, const vec3& v2);
 
 float dot(const vec3 &v1, const vec3 &v2);
 vec3 cross(const vec3 &v1, const vec3 &v2);
+
+vec3 flipIfInverted(vec3& reference, const vec3& checking);
 
 inline std::ostream& operator<<(std::ostream& s, vec3 v){
         s << "( " << v.e[0] << ", " << v.e[1] << ", " << v.e[2] << " )";
