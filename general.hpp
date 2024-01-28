@@ -2,6 +2,7 @@
     #define GENERALHPP
     #include <cmath>
     #include <iostream>
+    #include <memory>
     
 
     //constants

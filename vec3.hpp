@@ -36,6 +36,9 @@ class vec3{
             }
         }
     }
+    bool isNearZero(){
+        return fabs(e[0]) < 0.0001 && fabs(e[1]) < 0.0001 && fabs(e[2]) < 0.0001;
+    }
 };
 
 vec3 operator+(const vec3& v1, const vec3& v2);
@@ -47,6 +50,8 @@ float dot(const vec3 &v1, const vec3 &v2);
 vec3 cross(const vec3 &v1, const vec3 &v2);
 
 vec3 flipIfInverted(vec3& reference, const vec3& checking);
+vec3 reflect(vec3 v, vec3& normal);
+vec3 refract(vec3 v, vec3 n, float ratio);
 
 inline std::ostream& operator<<(std::ostream& s, vec3 v){
         s << "( " << v.e[0] << ", " << v.e[1] << ", " << v.e[2] << " )";

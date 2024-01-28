@@ -4,6 +4,7 @@
     #include <stb/stb_image_write.h>
     #include "general.hpp"
     #include "hittableList.hpp"
+    #include "material.hpp"
     enum ch_type{NONE, CH_R, CH_RG, CH_RGB, CH_RGBA};
 
     static interval colorSpace(0.0f, 255.0f);
@@ -69,8 +70,11 @@
             if(depth <= 0) return vec3(0.0f, 0.0f, 0.0f);
             hitRecord rec;
             if(world.hit(r, interval(0.001f, infinity), rec)){
-                vec3 dir = rec.normal + vec3::randomUnit();
-                return rayColor(Ray(rec.p, dir), depth-1, world) * 0.5f;
+                Ray scattered;
+                vec3 attenuation;
+                if(rec.mat->scatter(r, rec, attenuation, scattered)){
+                    return rayColor(scattered, depth - 1, world) * attenuation;
+                } else return vec3(0.0f, 0.0f, 0.0f);
             }
             float t = 0.5f*(1.0f + r.B.makeUnitVector().y());
             return vec3(0.5f, 0.0f, 0.5f) * t + vec3(1.0f, 1.0f, 1.0f) * (1.0f - t);

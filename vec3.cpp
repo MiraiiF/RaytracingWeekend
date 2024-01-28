@@ -37,3 +37,14 @@ vec3 flipIfInverted(vec3& reference, const vec3& checking){
         return checking;
     } else return -checking;
 }
+
+vec3 reflect(vec3 v, vec3& normal){
+    return v - ((normal*dot(v, normal))*2);   
+}
+
+vec3 refract(vec3 v, vec3 n, float ratio){
+    float cosT = fmin(dot(-v, n), 1.0f);
+    vec3 normal = (v + (n*cosT)) * ratio;
+    vec3 parallel = n * -sqrt(abs(1.0f - normal.squared_length()));
+    return normal + parallel;
+}

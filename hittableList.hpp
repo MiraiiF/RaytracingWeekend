@@ -1,7 +1,6 @@
 #ifndef HITTABLELISTHPP
     #define HITTABLELISTHPP
     #include "hittable.hpp"
-    #include <memory>
     #include <vector>
 
     class hittableList : public Hittable{
