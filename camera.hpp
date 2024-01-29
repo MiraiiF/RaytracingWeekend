@@ -27,6 +27,10 @@
         int quad_depth;
         unsigned int max_depth = 10;
         unsigned int nsamples = 10;
+        float vfov = 90;
+        vec3 lookfrom = vec3(0.0f, 0.0f, 0.0f);
+        vec3 lookat = vec3(0.0f, 0.0f, -1.0f);
+        vec3 up = vec3(0.0f, 1.0f, 0.0f);
         void render(hittableList& world){
             initialize();
             unsigned char* buffer = new unsigned char[image_width*image_height*(int)n_channels];
@@ -51,19 +55,29 @@
         float focal;
         vec3 cam;
         vec3 p0;
+        vec3 u, v, w;
         void initialize(){
             image_width = image_width;
             image_height = (int)((float)image_width/ratio);
             image_height = (image_height < 1) ? 1 : image_height;
-            float vheight = (float)image_height/100;
+
+            cam = lookfrom;
+
+            focal = (lookfrom - lookat).length();
+            float theta = degrees_to_radians(vfov);
+            float h = tan(theta/2.0f);
+            float vheight = 2 * h * focal;
+            
             float vwidth = vheight * ((float)image_width/(float)image_height);
-            vec3 vu = vec3(vwidth, 0.0f, 0.0f), vv = vec3(0.0f, vheight, 0.0f);
+
+            w = (lookfrom - lookat).makeUnitVector();
+            u = cross(up, w).makeUnitVector();
+            v = cross(w, u);
+
+            vec3 vu = u * vwidth, vv = -v * vheight;
             du = vu/image_width, dv = vv/image_height;
 
-            focal = (float)quad_depth;
-            cam = vec3(0.0f, 0.0f, 0.0f);
-
-            vec3 corner = cam - vec3(0.0f, 0.0f, focal) - (vu/2) - (vv/2);
+            vec3 corner = cam - (w * focal) - (vu/2) - (vv/2);
             p0 = corner + ((du + dv)*0.5);
         }
         vec3 rayColor(Ray r, unsigned int depth, hittableList& world){
